@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 
+import java.util.Collections;
 import java.util.Properties;
 
 @SpringBootApplication
@@ -39,7 +40,10 @@ public class NewsLoader {
 
     @Bean
     public CommandLineRunner run(KafkaConsumer<String, String> consumer, MongoClient mongoClient) {
-        return args -> loadNews(consumer, mongoClient);
+        return args -> {
+            consumer.subscribe(Collections.singletonList(processedTopic));
+            loadNews(consumer, mongoClient);
+        };
     }
 
     public void loadNews(KafkaConsumer<String, String> consumer, MongoClient mongoClient) {
@@ -76,4 +80,3 @@ public class NewsLoader {
         return registry -> registry.config().commonTags("application", "loader-service");
     }
 }
-
