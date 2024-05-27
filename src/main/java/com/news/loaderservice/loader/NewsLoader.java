@@ -1,4 +1,4 @@
-package org.news;
+package com.news.loaderservice.loader;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
